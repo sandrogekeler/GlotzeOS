@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sandrogekeler/AllesSandro/main/schemas/project.schema.json",
+  "product": "GlotzeOS",
+  "kind": "android-app",
+  "tracking": "github-issues",
+  "roadmap": "agent_docs/ROADMAP.md",
+  "health": {
+    "commands": [
+      {
+        "name": "gradle check",
+        "run": "./gradlew check"
+      },
+      {
+        "name": "template conflicts",
+        "run": "! git grep -nE '^(<<<<<<< before updating|>>>>>>> after updating)$'"
+      }
+    ]
+  }
+}
