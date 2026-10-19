@@ -4,3 +4,7 @@ pre-commit:
   jobs:
     - name: no template conflicts
       run: "! git grep -nE '^(<<<<<<< before updating|>>>>>>> after updating)$' -- {staged_files}"
+    - name: kotlin format
+      glob: "*.{kt,kts}"
+      run: ./gradlew -q spotlessApply
+      stage_fixed: true

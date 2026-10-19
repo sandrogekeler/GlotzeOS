@@ -17,6 +17,9 @@ CLAUDE.local.md
 # Copier leftovers
 *.rej
 
+# Bytecode from the .claude/ health runner
+__pycache__/
+
 # Gradle / Kotlin
 .gradle/
 .kotlin/
