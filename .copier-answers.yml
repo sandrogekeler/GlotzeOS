@@ -1,14 +1,16 @@
 # Changes here will be overwritten by Copier. Do not edit by hand.
-_commit: v0.1.0-2-gadbf466
+_commit: v0.2.0
 _src_path: gh:sandrogekeler/AllesSandro
 aislop: false
 claude_action: true
+default_branch: main
 description: A fast, personal Android TV home screen
 kind: android-app
 languages:
 - kotlin
 owner: sandrogekeler
 project_name: GlotzeOS
+public: true
 release_notes: true
 repo_name: GlotzeOS
 tracking: github-issues
