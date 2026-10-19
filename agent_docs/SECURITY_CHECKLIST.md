@@ -12,8 +12,13 @@ The threat surface of this project and how each part is held. Pair with
 
 ## S1. Inputs
 
-- [ ] TODO: every place untrusted input enters (files, network, IPC, CLI args)
-      and how it is validated.
+- [ ] Other apps' labels and banners come from `PackageManager` and are
+      treated as data: shown, never parsed or executed. A huge banner is a
+      memory risk; decode at display size before the list grows large.
+- [ ] Apps are opened only through `PackageManager`'s launch intents for a
+      listed package, never from a string a user or another app supplied.
+- [ ] No `INTERNET` permission, so nothing reaches the network
+      (`agent_docs/CLAUDE.md`, architecture rules).
 
 ## S2. Credentials and secrets
 
@@ -22,8 +27,9 @@ The threat surface of this project and how each part is held. Pair with
 
 ## S3. Paths and processes
 
-- [ ] File paths built from input are resolved and checked against a root.
-- [ ] No shell interpolation of untrusted strings.
+- [ ] The app runs no shell commands and calls no `pm`; system changes are
+      made by hand over ADB (`docs/device.md`).
+- [ ] No cloud backup or device transfer of app data (`res/xml/*_rules.xml`).
 
 ## S4. CI and supply chain
 

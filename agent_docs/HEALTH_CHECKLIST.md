@@ -15,6 +15,8 @@ issue or PR that taught it.
 
 - [ ] Errors are handled or deliberately propagated, never silently dropped.
 - [ ] Tests cover the behaviour a user relies on, not only the happy path.
+- [ ] Every screen is usable with the remote alone: focus starts somewhere,
+      moves predictably, and Back never leaves the home screen.
 
 ## 3. Scalable / future-proof
 
@@ -23,7 +25,12 @@ issue or PR that taught it.
 
 ## 4. Performant
 
-- [ ] TODO: the budgets that matter here (bundle size, startup, memory).
+- [ ] Cold start on the TV: not measured yet. The first Macrobenchmark run
+      sets the budget, and it is a ratchet: lowered as it improves, never
+      raised to let a change through.
+- [ ] Release APK size: 1.6 MB unsigned on 2026-10-19 (R8 and resource
+      shrinking on). Watch it when adding a dependency.
+- [ ] No `PackageManager` query, file read or bitmap decode on the main thread.
 
 ## Open backlog
 
