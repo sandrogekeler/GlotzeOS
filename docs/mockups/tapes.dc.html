@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GlotzeOS G: Tapes</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=VT323&display=swap">
+<style>
+body{margin:0;background:#000000}
+button{font-family:inherit}
+button:focus{outline:none}
+a{color:#CCC5B9}a:hover{color:#FFFCF2}
+@keyframes tv-noise{0%{background-position:0 0,0 0;transform:translate(0,0)}25%{background-position:-37px 11px,13px -29px;transform:translate(-2px,1px)}50%{background-position:21px -17px,-31px 7px;transform:translate(1px,-1px)}75%{background-position:-9px 33px,27px 19px;transform:translate(2px,2px)}100%{background-position:0 0,0 0;transform:translate(0,0)}}
+@keyframes blink{50%{opacity:0}}
+@keyframes flicker{0%{opacity:0.96}50%{opacity:1}100%{opacity:0.97}}
+.tv-static{animation:tv-noise 160ms steps(1) infinite}
+.blink{animation:blink 1.2s steps(1) infinite}
+.flicker{animation:flicker 120ms steps(2) infinite}
+@media (prefers-reduced-motion: reduce){.tv-static,.blink,.flicker{animation:none}}
+</style>
+</helmet>
+<div data-scene="tapes" onKeyDown="{{onKey}}" style="width: 1920px; height: 1080px; position: relative; overflow: hidden; background: #000000; color: #FFFCF2; font-family: 'IBM Plex Mono', monospace">
+  <div style="position: absolute; inset: 0; transform-origin: 1440px 498px; transform: {{camera}}; transition: transform {{cameraMs}} cubic-bezier(0.7, 0, 0.2, 1)">
+    <div aria-hidden="true" style="position: absolute; left: -400px; right: -400px; top: -200px; height: 900px; background: repeating-linear-gradient(90deg, rgba(255, 252, 242, 0.018) 0 2px, rgba(0, 0, 0, 0) 2px 46px), linear-gradient(180deg, #030303 0%, #0A0A0B 100%)"></div>
+    <div aria-hidden="true" style="position: absolute; left: -400px; right: -400px; top: 120px; height: 60px; background: repeating-linear-gradient(90deg, rgba(150, 165, 185, 0.05) 0 220px, rgba(0, 0, 0, 0) 220px 320px)"></div>
+    <div aria-hidden="true" style="position: absolute; left: -400px; right: -400px; top: 700px; height: 2px; background: rgba(255, 252, 242, 0.05)"></div>
+    <div aria-hidden="true" style="position: absolute; left: -400px; right: -400px; top: 702px; bottom: -200px; background: linear-gradient(180deg, #0D0D0E 0%, #060606 60%, #020202 100%)"></div>
+
+    <div aria-hidden="true" style="position: absolute; left: 1416px; top: -20px; width: 48px; height: 58px; border-radius: 0 0 6px 6px; background: linear-gradient(180deg, #1A1A1D 0%, #2A2A2E 100%); box-shadow: 0 10px 30px rgba(255, 238, 210, 0.35)"></div>
+    <div aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 1920px; height: 900px; clip-path: polygon(1418px 38px, 1462px 38px, 1830px 880px, 1050px 880px); background: linear-gradient(180deg, rgba(255, 238, 210, {{spotCone}}) 0%, rgba(255, 238, 210, 0.03) 100%); filter: blur(10px); transition: opacity 300ms linear"></div>
+    <div aria-hidden="true" style="position: absolute; left: 990px; top: 800px; width: 900px; height: 150px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(255, 236, 205, 0.2) 0%, rgba(255, 236, 205, 0.06) 45%, rgba(0, 0, 0, 0) 70%)"></div>
+    <div aria-hidden="true" style="position: absolute; left: 70px; top: 840px; width: 560px; height: 50px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 70%)"></div>
+    <div aria-hidden="true" style="position: absolute; left: 1100px; top: 838px; width: 700px; height: 50px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 70%)"></div>
+
+    <div style="position: absolute; left: 96px; top: 54px; display: flex; flex-direction: column; gap: 6px; opacity: {{chromeOpacity}}; transition: opacity 200ms linear">
+      <div style="font-size: 22px; font-weight: 600; letter-spacing: 0.32em; color: #CCC5B9">GLOTZE</div>
+      <div style="font-size: 18px; letter-spacing: 0.16em; color: #6E6A63">TAPE {{tapeIndex}} OF {{tapeCount}}</div>
+    </div>
+    <div style="position: absolute; right: 96px; top: 54px; font-size: 22px; letter-spacing: 0.1em; color: #CCC5B9; font-variant-numeric: tabular-nums; opacity: {{chromeOpacity}}; transition: opacity 200ms linear">{{timeLabel}}</div>
+
+    <div aria-hidden="true" style="position: absolute; left: 112px; top: 836px; width: 16px; height: 24px; background: #0A0A0B"></div>
+    <div aria-hidden="true" style="position: absolute; left: 564px; top: 836px; width: 16px; height: 24px; background: #0A0A0B"></div>
+    <div aria-hidden="true" style="position: absolute; left: 96px; top: 164px; width: 500px; height: 676px; border-radius: 4px; background: linear-gradient(180deg, #0E0E10 0%, #08080A 100%); box-shadow: inset 0 2px 0 rgba(255, 252, 242, 0.05), inset 0 0 0 1px rgba(255, 252, 242, 0.03)">
+      <sc-for list="{{slots}}" as="s" hint-placeholder-count="8">
+        <div style="position: absolute; left: 32px; top: {{s.top}}; width: 436px; height: 64px; border-radius: 3px; background: #030303; box-shadow: inset 0 6px 10px rgba(0, 0, 0, 0.95), 0 1px 0 rgba(255, 252, 242, 0.04)">
+          <div style="position: absolute; inset: 0; border-radius: 3px; background: radial-gradient(ellipse 70% 120% at 50% 0%, rgba(255, 228, 185, 0.32) 0%, rgba(255, 228, 185, 0) 70%); opacity: {{s.glow}}; transition: opacity 220ms linear"></div>
+        </div>
+      </sc-for>
+    </div>
+    <div aria-hidden="true" style="position: absolute; left: {{lampX}}; top: {{lampY}}; width: 700px; height: 160px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(255, 228, 185, 0.12) 0%, rgba(0, 0, 0, 0) 65%); opacity: {{lampOpacity}}; transition: top 220ms cubic-bezier(0.2, 0, 0, 1), opacity 200ms linear"></div>
+
+    <div style="position: absolute; left: 136px; top: 204px; display: flex; flex-direction: column; gap: 24px">
+      <sc-for list="{{tapes}}" as="tape" hint-placeholder-count="8">
+        <button type="button" data-tape="1" aria-label="{{tape.label}}" onFocus="{{tape.select}}" onMouseEnter="{{tape.hover}}" onClick="{{tape.insert}}" style="width: 420px; height: 56px; position: relative; padding: 0; border: 0; border-radius: 3px; background: linear-gradient(180deg, #1B1B1F 0%, #101013 100%); cursor: pointer; text-align: left; visibility: {{tape.visibility}}; transform: {{tape.transform}}; box-shadow: {{tape.light}}; transition: transform 220ms cubic-bezier(0.2, 0, 0, 1), box-shadow 220ms linear">
+          <span style="position: absolute; left: 12px; top: 9px; width: 300px; height: 38px; border-radius: 2px; background: #E6E0D3; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; box-sizing: border-box">
+            <span style="font-size: 21px; font-weight: 600; color: #1A1918; white-space: nowrap">{{tape.name}}</span>
+            <span style="font-size: 12px; font-weight: 500; letter-spacing: 0.12em; color: #5A564F">{{tape.meta}}</span>
+          </span>
+          <span style="position: absolute; right: 16px; top: 18px; font-size: 14px; font-weight: 600; letter-spacing: 0.2em; color: #3A3A42">VHS</span>
+          <span aria-hidden="true" style="position: absolute; inset: 0; border-radius: 3px; background: #000000; opacity: {{tape.shade}}; transition: opacity 200ms linear"></span>
+        </button>
+      </sc-for>
+    </div>
+
+    <div style="position: absolute; inset: 0; perspective: 2000px; perspective-origin: 700px -300px; transform-style: preserve-3d; pointer-events: none">
+
+      <div style="position: absolute; left: 1080px; top: 252px; width: 720px; height: 520px; transform-style: preserve-3d">
+        <div aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 720px; height: 380px; transform-origin: 50% 0; transform: rotateX(-90deg); background: radial-gradient(ellipse 60% 70% at 50% 40%, #4A4740 0%, #24242A 55%, #0B0B0D 100%)"></div>
+        <div aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 380px; height: 520px; transform-origin: 0 50%; transform: rotateY(90deg); background: linear-gradient(90deg, #1C1C21 0%, #050506 100%)"></div>
+        <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #232328 0%, #141417 100%); box-shadow: inset 0 2px 0 rgba(255, 252, 242, 0.1), inset 0 -2px 0 rgba(0, 0, 0, 0.6)">
+          <div class="flicker" style="position: absolute; left: 80px; top: 46px; width: 560px; height: 400px; overflow: hidden; border-radius: 42px / 34px; background: #07080A; box-shadow: 0 0 0 12px #0A0A0C, 0 0 0 14px #2A2A30">
+            <sc-if value="{{showPreview}}" hint-placeholder-val="{{true}}">
+              <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px">
+                <div style="font-family: 'VT323', monospace; font-size: 80px; line-height: 1; color: #E8EEF5; text-shadow: -1.5px 0 rgba(120, 170, 255, 0.7), 1.5px 0 rgba(255, 120, 120, 0.5), 0 0 18px rgba(200, 220, 255, 0.35)">{{current.name}}</div>
+                <div style="font-family: 'VT323', monospace; font-size: 26px; letter-spacing: 0.16em; color: #8D97A3">{{current.meta}}</div>
+              </div>
+              <div style="position: absolute; left: 34px; top: 26px; font-family: 'VT323', monospace; font-size: 28px; color: #C9D3DE">CH 03</div>
+              <div class="blink" style="position: absolute; left: 0; right: 0; bottom: 30px; text-align: center; font-family: 'VT323', monospace; font-size: 26px; letter-spacing: 0.16em; color: #8D97A3">INSERT TAPE</div>
+            </sc-if>
+            <sc-if value="{{showStatic}}" hint-placeholder-val="{{false}}">
+              <div class="tv-static" style="position: absolute; inset: -20px; background: repeating-linear-gradient(0deg, rgba(220, 225, 232, 0.22) 0 1px, rgba(0, 0, 0, 0) 1px 3px), repeating-linear-gradient(90deg, rgba(220, 225, 232, 0.16) 0 2px, rgba(0, 0, 0, 0) 2px 7px); background-color: #1C1D21"></div>
+              <div style="position: absolute; left: 0; right: 0; top: 178px; text-align: center; font-family: 'VT323', monospace; font-size: 38px; letter-spacing: 0.2em; color: #E8EEF5">TRACKING</div>
+            </sc-if>
+            <sc-if value="{{showPlay}}" hint-placeholder-val="{{false}}">
+              <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center">
+                <div style="font-family: 'VT323', monospace; font-size: 42px; color: #E8EEF5; text-shadow: 0 0 10px rgba(200, 220, 255, 0.35)">{{current.name}}</div>
+              </div>
+              <div style="position: absolute; left: 84px; top: 70px; font-family: 'VT323', monospace; font-size: 18px; color: #E8EEF5">PLAY ▶</div>
+              <div style="position: absolute; right: 84px; top: 70px; font-family: 'VT323', monospace; font-size: 18px; color: #E8EEF5">SP 0:00:01</div>
+            </sc-if>
+            <div aria-hidden="true" style="position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0 2px, rgba(0, 0, 0, 0) 2px 4px)"></div>
+            <div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.8) 100%)"></div>
+            <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(165deg, rgba(255, 252, 242, 0.09) 0%, rgba(255, 252, 242, 0) 36%)"></div>
+          </div>
+          <div style="position: absolute; left: 80px; right: 80px; top: 470px; height: 32px; display: flex; align-items: center; gap: 18px">
+            <span style="font-size: 18px; font-weight: 600; letter-spacing: 0.3em; color: #5E5E68">GLOTZE</span>
+            <span aria-hidden="true" style="flex: 1; height: 20px; background: repeating-linear-gradient(90deg, #0C0C0E 0 3px, rgba(0, 0, 0, 0) 3px 8px)"></span>
+            <span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: {{led}}"></span>
+            <span aria-hidden="true" style="width: 28px; height: 28px; border-radius: 50%; background: #1E1E23; box-shadow: inset 0 2px 0 rgba(255, 252, 242, 0.12), 0 2px 4px rgba(0, 0, 0, 0.6)"></span>
+            <span aria-hidden="true" style="width: 28px; height: 28px; border-radius: 50%; background: #1E1E23; box-shadow: inset 0 2px 0 rgba(255, 252, 242, 0.12), 0 2px 4px rgba(0, 0, 0, 0.6)"></span>
+          </div>
+        </div>
+      </div>
+
+      <div style="position: absolute; left: 1140px; top: 774px; width: 600px; height: 86px; transform-style: preserve-3d">
+        <div aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 600px; height: 280px; transform-origin: 50% 0; transform: rotateX(-90deg); background: linear-gradient(180deg, #24242A 0%, #0A0A0C 100%)"></div>
+        <div aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 280px; height: 86px; transform-origin: 0 50%; transform: rotateY(90deg); background: linear-gradient(90deg, #17171B 0%, #050506 100%)"></div>
+        <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #1B1B20 0%, #111114 100%); box-shadow: inset 0 2px 0 rgba(255, 252, 242, 0.08)">
+          <div style="position: absolute; left: 24px; top: 34px; font-size: 15px; font-weight: 500; letter-spacing: 0.22em; color: #55555E">VHS HQ</div>
+          <div style="position: absolute; left: 135px; top: 21px; width: 330px; height: 44px; border-radius: 3px; background: #050506; box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.9), 0 1px 0 rgba(255, 252, 242, 0.08)"></div>
+          <div style="position: absolute; right: 20px; top: 20px; width: 100px; height: 46px; border-radius: 3px; background: #040507; display: flex; align-items: center; justify-content: center; font-family: 'VT323', monospace; font-size: 30px; color: #9FB4CC; text-shadow: 0 0 8px rgba(159, 180, 204, 0.6)">{{vcrText}}</div>
+        </div>
+      </div>
+
+      <div aria-hidden="true" style="position: absolute; left: 136px; top: {{fly.top}}; width: 420px; height: 56px; transform-style: preserve-3d; visibility: {{fly.visibility}}; transform: {{fly.transform}}; transition: {{fly.transition}}">
+        <div style="position: absolute; left: 0; top: 0; width: 420px; height: 228px; transform-origin: 50% 0; transform: rotateX(-90deg); background: #141417">
+          <div style="position: absolute; left: 60px; right: 60px; top: 20px; height: 70px; border-radius: 2px; background: #E6E0D3"></div>
+          <div style="position: absolute; left: 110px; right: 110px; top: 120px; height: 60px; border-radius: 4px; background: #08080A"></div>
+        </div>
+        <div style="position: absolute; inset: 0; border-radius: 3px; background: linear-gradient(180deg, #1B1B1F 0%, #101013 100%)">
+          <div style="position: absolute; left: 12px; top: 9px; width: 300px; height: 38px; border-radius: 2px; background: #E6E0D3; display: flex; align-items: center; padding: 0 12px; box-sizing: border-box; font-size: 21px; font-weight: 600; color: #1A1918; white-space: nowrap">{{current.name}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 36px; display: flex; justify-content: center; gap: 48px; font-size: 18px; letter-spacing: 0.16em; color: #6E6A63; opacity: {{chromeOpacity}}; transition: opacity 200ms linear">
+    <span>▲ ▼ BROWSE</span>
+    <span>OK INSERT</span>
+    <span>BACK EJECT</span>
+  </div>
+  <sc-if value="{{showEject}}" hint-placeholder-val="{{false}}">
+    <button type="button" data-eject="1" onClick="{{eject}}" style="position: absolute; left: 96px; bottom: 54px; height: 60px; padding: 0 26px; border: 1px solid rgba(255, 252, 242, 0.4); border-radius: 30px; background: rgba(0, 0, 0, 0.55); color: #FFFCF2; font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 500; letter-spacing: 0.14em; cursor: pointer">EJECT</button>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1920,"height":1080}}'>
+class Component extends DCLogic {
+  state = { focus: 0, phase: 'browse' };
+  timers = [];
+
+  componentDidMount() {
+    this.clock = setInterval(() => this.forceUpdate(), 15000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.clock);
+    this.timers.forEach(clearTimeout);
+  }
+
+  later(ms, fn) {
+    this.timers.push(setTimeout(fn, ms));
+  }
+
+  insert(i, root) {
+    if (this.state.phase !== 'browse') return;
+    this.root = root;
+    this.setState({ focus: i, phase: 'insert' });
+    this.later(560, () => this.setState({ phase: 'loading' }));
+    this.later(1150, () => this.setState({ phase: 'zoom' }));
+    this.later(1950, () => {
+      this.setState({ phase: 'on' });
+      this.later(30, () => this.root?.querySelector('[data-eject]')?.focus({ preventScroll: true }));
+    });
+  }
+
+  eject() {
+    this.timers.forEach(clearTimeout);
+    this.timers = [];
+    this.setState({ phase: 'browse' });
+    this.later(60, () => this.root?.querySelectorAll('[data-tape]')[this.state.focus]?.focus({ preventScroll: true }));
+  }
+
+  renderVals() {
+    const tapes = [
+      { name: 'Netflix', meta: 'SP 120' },
+      { name: 'YouTube', meta: 'EP 360' },
+      { name: 'Plex', meta: 'SP 180' },
+      { name: 'Prime Video', meta: 'SP 120' },
+      { name: 'Disney+', meta: 'SP 90' },
+      { name: 'Spotify', meta: 'LP 240' },
+      { name: 'Kodi', meta: 'SP 120' },
+      { name: 'Settings', meta: 'SP 30' },
+    ];
+    const { focus: f, phase } = this.state;
+    const zoomed = phase === 'zoom' || phase === 'on';
+    const pulled = 'translateX(140px) scale(1.04)';
+    const spineTop = 204 + f * 80;
+    const dx = 1440 - 346;
+    const dy = 817 - (spineTop + 28);
+    const atSlot = 'translate3d(' + dx + 'px, ' + dy + 'px, 4px) scale(0.78)';
+    const inside = 'translate3d(' + dx + 'px, ' + dy + 'px, -460px) scale(0.78)';
+    const flyStates = {
+      browse: { visibility: 'hidden', transform: pulled, transition: 'none' },
+      insert: { visibility: 'visible', transform: atSlot, transition: 'transform 540ms cubic-bezier(0.3, 0, 0, 1)' },
+      loading: { visibility: 'visible', transform: inside, transition: 'transform 520ms cubic-bezier(0.5, 0, 0.75, 0)' },
+    };
+    const vcr = { browse: '--:--', insert: 'LOAD', loading: 'LOAD', zoom: '0:00', on: '0:01' };
+    const now = new Date();
+    return {
+      current: tapes[f],
+      tapeIndex: f + 1,
+      tapeCount: tapes.length,
+      timeLabel: now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }),
+      spotCone: phase === 'browse' ? '0.10' : '0.14',
+      lampX: '0px',
+      lampY: spineTop - 52 + 'px',
+      lampOpacity: phase === 'browse' ? '1' : '0',
+      led: phase === 'browse' ? '#3A3A40' : '#C9A24A',
+      camera: zoomed ? 'translate(-480px, 42px) scale(3.5)' : 'translate(0px, 0px) scale(1)',
+      cameraMs: zoomed ? '800ms' : '550ms',
+      chromeOpacity: phase === 'browse' ? '1' : '0',
+      showPreview: phase === 'browse',
+      showStatic: phase === 'insert' || phase === 'loading',
+      showPlay: zoomed,
+      showEject: phase === 'on',
+      vcrText: vcr[phase],
+      fly: { top: spineTop + 'px', ...(flyStates[phase] ?? { visibility: 'hidden', transform: inside, transition: 'none' }) },
+      slots: tapes.map((t, i) => ({ top: 36 + i * 80 + 'px', glow: i === f && phase === 'browse' ? '1' : '0' })),
+      eject: () => this.eject(),
+      tapes: tapes.map((t, i) => ({
+        ...t,
+        label: t.name + ' tape',
+        select: () => { if (phase === 'browse' && f !== i) this.setState({ focus: i }); },
+        hover: (e) => { if (this.state.phase === 'browse') e.currentTarget.focus({ preventScroll: true }); },
+        insert: (e) => this.insert(i, e.currentTarget.closest('[data-scene]')),
+        visibility: i === f && phase !== 'browse' ? 'hidden' : 'visible',
+        transform: i === f ? pulled : 'translateX(0px) scale(1)',
+        light: i === f
+          ? '0 0 0 1px rgba(255, 236, 205, 0.25), 0 -6px 50px rgba(255, 228, 185, 0.22), 0 20px 40px rgba(0, 0, 0, 0.9)'
+          : '0 0 0 1px rgba(255, 252, 242, 0.02), 0 0 0 rgba(255, 228, 185, 0), 0 0 0 rgba(0, 0, 0, 0)',
+        shade: i === f ? '0' : '0.68',
+      })),
+      onKey: (e) => {
+        if (e.key === 'Escape' || e.key === 'Backspace') {
+          if (this.state.phase !== 'browse') {
+            e.preventDefault();
+            this.root = e.currentTarget;
+            this.eject();
+          }
+          return;
+        }
+        if (this.state.phase !== 'browse') return;
+        const step = { ArrowDown: 1, ArrowUp: -1 }[e.key];
+        if (!step) return;
+        e.preventDefault();
+        const all = e.currentTarget.querySelectorAll('[data-tape]');
+        const next = Math.max(0, Math.min(all.length - 1, this.state.focus + step));
+        all[next].focus({ preventScroll: true });
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>
