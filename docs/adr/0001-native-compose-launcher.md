@@ -4,7 +4,9 @@ Date: 2026-10-19. Status: accepted.
 
 ## Context
 
-The parents' TV shows a sponsored ad before any app can be reached. The goal is
+GlotzeOS runs on a Chromecast with Google TV plugged into the living-room
+Hisense TV. Its stock home screen shows sponsored content before any app can be
+reached, and the Hisense's own VIDAA system cannot run Android apps. The goal is
 a home screen Sandro builds and extends himself: an app grid first, later a
 personalised home, an intro animation, transitions, and speed above all.
 

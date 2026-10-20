@@ -9,8 +9,8 @@ on the TV, and correct this file once they are confirmed.
 
 | | |
 |---|---|
-| Model | [unknown] |
-| Android TV version / API level | [unknown] |
+| Model | Chromecast with Google TV on the living-room Hisense; 4K or HD [unknown], see step 4 |
+| Android TV version / API level | [unknown], expected 14 / 34 after Google's 2025 update |
 | Stock launcher package | [unknown], find it with the command in step 5 |
 | ADB over Wi-Fi survives a reboot | [unknown], check before step 6 |
 
