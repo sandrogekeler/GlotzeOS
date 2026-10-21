@@ -25,6 +25,7 @@ cannot change what happens below it (boot animation, power-off). See
 | `app/src/main/kotlin/.../home/` | The home screen: loading apps (`TvApp.kt`) and drawing them (`HomeScreen.kt`) |
 | `app/src/test/` | JVM unit tests, no device needed |
 | `docs/adr/` | Decisions and why. Read the relevant one before changing what it decided |
+| `docs/mockups/` | Visual direction only. The content in them is invented; never build from it |
 | `docs/device.md` | Connecting the TV, installing, making GlotzeOS the home screen, and undoing it |
 
 ## Architecture rules
