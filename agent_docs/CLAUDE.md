@@ -73,11 +73,15 @@ a priority (`p0`-`p3`) label. Close issues from the pull request with
 
 ## Commits & pull requests
 
-- A merged pull request's title is public release-notes copy: imperative,
+- One pull request per piece of work, never one per tweak. Its `## Changelog`
+  section gives each change a line (`- feature: ...`, `- fix: ...`,
+  `- chore: ...`). Split only for risk, an independent revert or a different
+  release.
+- Changelog lines and titles are public release-notes copy: imperative,
   sentence case, no trailing period, no em dashes.
-- One concern per pull request.
-- Every pull request needs a `type:` and an `area:` label before it can merge
-  (the `pr-labelled` status). Which `type:`: see `.github/pull_request_template.md`.
+- Every pull request needs an `area:` label, plus a `type:` label when it has
+  no Changelog section, before it can merge (the `pr-labelled` status). Which
+  type: see `.github/pull_request_template.md`.
 
 ## Files that come from the template
 
@@ -86,9 +90,10 @@ by Renovate (`.copier-answers.yml` records the version). Two kinds of file:
 
 - **Locked** (re-applied on every template update): `.claude/suite-*.py`,
   `.github/workflows/{codeql,scorecard,pr-labelled,labels,template-guard}.yml`
-  and the optional `claude.yml`, `.github/scripts/release-notes.py`. Do not
-  edit them here: change AllesSandro instead. A local edit is kept but shows up
-  as a merge conflict on the next template update.
+  and the optional `claude.yml`, `.github/scripts/release-notes.py` and
+  `.github/scripts/changelog-section.py`. Do not edit them here: change
+  AllesSandro instead. A local edit is kept but shows up as a merge conflict on
+  the next template update.
 - **Seeded** (created once, owned by this repo): everything else, including
   this file and `.github/workflows/ci.yml`.
 
