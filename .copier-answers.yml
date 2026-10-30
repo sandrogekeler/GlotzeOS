@@ -3,11 +3,13 @@ _commit: v0.3.0
 _src_path: gh:sandrogekeler/AllesSandro
 aislop: false
 claude_action: true
+copyright_holder: Alessandro Gekeler
 default_branch: main
 description: A fast, personal Android TV home screen
 kind: android-app
 languages:
 - kotlin
+license: MIT
 owner: sandrogekeler
 project_name: GlotzeOS
 public: true
