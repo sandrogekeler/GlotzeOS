@@ -1,12 +1,12 @@
 [versions]
-agp = "9.4.1"
+agp = "9.5.1"
 kotlin = "2.4.21"
 compose-bom = "2026.09.00"
 tv-material = "1.1.0"
 activity-compose = "1.13.0"
 core-ktx = "1.19.1"
 junit = "4.13.2"
-spotless = "8.10.4"
+spotless = "8.11.0"
 ktlint = "1.8.0"
 
 [libraries]
