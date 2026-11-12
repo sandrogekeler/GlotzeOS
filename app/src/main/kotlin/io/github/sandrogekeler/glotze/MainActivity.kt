@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
     private fun open(app: TvApp) {
         when (val result = launchApp(this, app.packageName)) {
             LaunchResult.Launched -> {
-                Unit
+                // The app is on screen; nothing to do here.
             }
 
             LaunchResult.NotInstalled -> {
