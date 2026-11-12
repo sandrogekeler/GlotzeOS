@@ -40,12 +40,13 @@ a device. Previews use `NoArt`, so cards show labels.
 Once:
 
 ```sh
-python tools/tv.py emulator create        # API 34 Android TV, 1080p, x86_64
+python tools/tv.py emulator create        # API 34 Android TV, 1080p, x86
 ```
 
 The tool checks the image name against what `sdkmanager --list` offers and
 lists the TV images it does offer if the default is missing. Use `--tag
-google-tv` for the Google TV image, `--abi arm64-v8a` on Apple silicon.
+google-tv` for the Google TV image, `--abi arm64-v8a` on Apple silicon. API 34
+TV images exist only for x86 and arm64-v8a.
 
 Then, each session:
 

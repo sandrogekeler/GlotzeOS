@@ -35,10 +35,11 @@ WINDOWS = os.name == "nt"
 
 AVD_NAME = "GlotzeTV"
 # Android TV 14 is what the Chromecast with Google TV runs. The image name is
-# checked against `sdkmanager --list` before use, never assumed.
+# checked against `sdkmanager --list` before use, never assumed. API 34 TV images are
+# x86 and arm64-v8a only; x86_64 TV images start at API 36.
 DEFAULT_IMAGE_API = 34
 DEFAULT_IMAGE_TAG = "android-tv"
-DEFAULT_ABI = "x86_64"
+DEFAULT_ABI = "x86"
 DEFAULT_DEVICE = "tv_1080p"
 
 # Activities that answer HOME but are not a launcher anyone chose.
@@ -136,9 +137,12 @@ def system_image(api: int, tag: str, abi: str) -> str:
 
 
 def tv_images(sdkmanager_list: str) -> list[str]:
-    """Every TV system image sdkmanager offers, installed or not."""
-    images = re.findall(r"(system-images;android-[\w.-]+;(?:android-tv|google-tv)[\w-]*;[\w-]+)", sdkmanager_list)
-    return sorted(set(images))
+    """Every TV system image sdkmanager offers, installed or not, as `;` package ids.
+
+    Newer cmdline-tools list packages with `/` instead of `;`; both are read.
+    """
+    found = re.findall(r"(system-images[;/]android-[\w.-]+[;/](?:android-tv|google-tv)[\w-]*[;/][\w-]+)", sdkmanager_list)
+    return sorted({image.replace("/", ";") for image in found})
 
 
 def sdk_from_local_properties(text: str) -> str | None:
@@ -514,7 +518,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("action", choices=["create", "start"])
     p.add_argument("--api", type=int, default=DEFAULT_IMAGE_API)
     p.add_argument("--tag", default=DEFAULT_IMAGE_TAG, help="android-tv or google-tv")
-    p.add_argument("--abi", default=DEFAULT_ABI, help="x86_64 on Intel/AMD, arm64-v8a on Apple silicon")
+    p.add_argument("--abi", default=DEFAULT_ABI, help="x86 on Intel/AMD, arm64-v8a on Apple silicon")
     p.add_argument("--device", default=DEFAULT_DEVICE)
     p.add_argument("--cold", action="store_true", help="boot without loading the snapshot")
     p.set_defaults(func=cmd_emulator)

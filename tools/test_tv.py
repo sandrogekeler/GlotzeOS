@@ -112,13 +112,24 @@ class Sdk(unittest.TestCase):
 
     def test_tv_images_from_sdkmanager_list(self):
         listing = """Available Packages:
-  system-images;android-34;android-tv;x86_64       | 3 | Android TV Intel x86_64 Atom System Image
-  system-images;android-34;google-tv;x86_64        | 3 | Google TV Intel x86_64 Atom System Image
+  system-images;android-34;android-tv;x86          | 3 | Android TV Intel x86 Atom System Image
+  system-images;android-34;google-tv;x86           | 3 | Google TV Intel x86 Atom System Image
   system-images;android-34;google_apis;x86_64      | 14 | Google APIs Intel x86_64 Atom System Image
 """
         self.assertEqual(
             tv.tv_images(listing),
-            ["system-images;android-34;android-tv;x86_64", "system-images;android-34;google-tv;x86_64"],
+            ["system-images;android-34;android-tv;x86", "system-images;android-34;google-tv;x86"],
+        )
+
+    def test_tv_images_from_slash_separated_list(self):
+        listing = "  system-images/android-34/android-tv/x86 | 3 | Android TV Intel x86 Atom System Image\n"
+        self.assertEqual(tv.tv_images(listing), ["system-images;android-34;android-tv;x86"])
+
+    def test_default_image_is_one_that_exists(self):
+        # API 34 has no x86_64 TV image (checked against sdkmanager, 2026-11-12).
+        self.assertEqual(
+            tv.system_image(tv.DEFAULT_IMAGE_API, tv.DEFAULT_IMAGE_TAG, tv.DEFAULT_ABI),
+            "system-images;android-34;android-tv;x86",
         )
 
     def test_system_image_name(self):

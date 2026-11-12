@@ -1,11 +1,6 @@
 package io.github.sandrogekeler.glotze.home
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.input.InputMode
-import androidx.compose.ui.input.InputModeManager
 import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -28,22 +23,8 @@ class HomeScreenFocusTest {
 
     private val apps = listOf("alpha", "bravo", "charlie", "delta").map { TvApp(it, it, "$it.Main") }
 
-    // Tests start in touch mode, where Compose does not focus clickable items. A TV has no
-    // touchscreen and is always in key mode, so the tests run in key mode too.
-    private val keyMode =
-        object : InputModeManager {
-            override val inputMode = InputMode.Keyboard
-
-            override fun requestInputMode(inputMode: InputMode) = inputMode == InputMode.Keyboard
-        }
-
     private fun show(onOpen: (TvApp) -> Unit = {}) {
-        compose.setContent { OnTv { HomeScreen(apps = apps, onOpen = onOpen) } }
-    }
-
-    @Composable
-    private fun OnTv(content: @Composable () -> Unit) {
-        CompositionLocalProvider(LocalInputModeManager provides keyMode, content = content)
+        compose.setContent { HomeScreen(apps = apps, onOpen = onOpen) }
     }
 
     @Test
