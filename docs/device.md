@@ -5,6 +5,10 @@ cloud session that set this repo up could not reach the TV; nothing below has
 been run on it yet. Steps marked *per model* differ between TV makers: check
 on the TV, and correct this file once they are confirmed.
 
+`tools/tv.py` wraps every step below (`python tools/tv.py --help`); the raw
+`adb` commands stay here for reference and for when the tool is not at hand.
+Day-to-day testing is in [`testing.md`](testing.md).
+
 ## This TV
 
 | | |
@@ -40,11 +44,14 @@ installs it).
 
 `adb devices` should list the TV as `device`, not `unauthorized`.
 
+With the tool: `python tools/tv.py pair <tv-ip>:<pairing-port>`, then
+`python tools/tv.py connect <tv-ip>:<connect-port>`.
+
 ## 3. Install and open
 
 ```sh
-./gradlew installDebug
-adb shell am start -n io.github.sandrogekeler.glotze/.MainActivity
+python tools/tv.py install --debug     # or: ./gradlew installDebug
+python tools/tv.py open                # or: adb shell am start -n io.github.sandrogekeler.glotze/.MainActivity
 ```
 
 GlotzeOS also appears in the TV's own app list, so it can be opened with the
@@ -52,6 +59,8 @@ remote while the stock launcher is still the home screen. Check that every app
 appears, that the remote moves between them, and that each one opens.
 
 ## 4. Fill in the table above
+
+`python tools/tv.py info` prints the whole table. By hand:
 
 ```sh
 adb shell getprop ro.product.model
@@ -66,6 +75,7 @@ adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c 
 ```
 
 The first line of the result is the package that answers the Home button.
+`python tools/tv.py home status` shows it and the other launchers installed.
 
 ## 6. Make GlotzeOS the home screen
 
@@ -87,6 +97,10 @@ factory reset.
    `com.google.android.tungsten.setupwraith` turns it back on unless it is
    disabled too. They also report the remote's YouTube button stops working.
 3. Press Home. GlotzeOS should open.
+
+`python tools/tv.py home set --google-tv-setup` does step 2 for the launcher
+it finds, after printing the undo and asking first; `home undo
+--google-tv-setup` reverses it.
 
 ### Undo
 

@@ -20,10 +20,14 @@ cannot change what happens below it (boot animation, power-off). See
 
 | Path | What |
 |---|---|
-| `app/` | The launcher, the only module so far |
+| `app/` | The launcher |
 | `app/src/main/kotlin/.../MainActivity.kt` | The single activity, registered as `HOME` and in the TV's app list |
-| `app/src/main/kotlin/.../home/` | The home screen: loading apps (`TvApp.kt`) and drawing them (`HomeScreen.kt`) |
-| `app/src/test/` | JVM unit tests, no device needed |
+| `app/src/main/kotlin/.../home/` | The home screen: the live app list (`AppCatalog.kt`, `TvApp.kt`), art loading (`AppArt.kt`), launching (`Launch.kt`) and drawing (`HomeScreen.kt`) |
+| `app/src/test/` | Pure JVM unit tests, no Android |
+| `app/src/testDebug/` | Robolectric and Compose UI tests: focus, Back, catalog, launching |
+| `benchmark/` | Macrobenchmark cold start and the Baseline Profile generator; runs only on a device |
+| `tools/tv.py` | The TV and emulator tool: connect, install, measure, launcher swap. Python stdlib |
+| `docs/testing.md` | The four test loops, from JVM tests to numbers on the TV |
 | `docs/adr/` | Decisions and why. Read the relevant one before changing what it decided |
 | `docs/mockups/` | Visual direction only. The content in them is invented; never build from it |
 | `docs/device.md` | Connecting the TV, installing, making GlotzeOS the home screen, and undoing it |
@@ -36,7 +40,14 @@ cannot change what happens below it (boot animation, power-off). See
   something has focus when a screen opens, and Back never leaves the home
   screen. There is no pointer and no touch.
 - **Nothing slow on the main thread.** `PackageManager` queries, file reads and
-  bitmap decoding run on `Dispatchers.IO`. Startup speed is the product.
+  bitmap decoding run on `Dispatchers.IO`. Startup speed is the product. Debug
+  builds log violations through StrictMode (`tools/tv.py logs`).
+- **Measured on the TV, release build.** Speed claims come from
+  `tools/tv.py startup` or Macrobenchmark on the TV, never from the emulator
+  or a debug build. The budget in `HEALTH_CHECKLIST.md` only goes down.
+- **The home screen never crashes.** Anything that can throw on user action
+  (launching an app, a vanished package) returns a result instead; with the
+  stock launcher disabled there is nothing behind GlotzeOS.
 - **Logic is pure, Android is thin.** What the screen shows is decided by plain
   functions (`homeOrder`) tested on the JVM; the Android-facing code only
   gathers inputs and draws results.
@@ -54,16 +65,21 @@ cannot change what happens below it (boot animation, power-off). See
 ./gradlew spotlessApply    # format
 ./gradlew assembleDebug    # debug APK in app/build/outputs/apk/debug/
 ./gradlew installDebug     # install on the connected TV (see docs/device.md)
-./gradlew assembleRelease  # R8-shrunk release APK
+./gradlew assembleRelease  # R8-shrunk release APK, signed with the local debug key
 python3 .claude/suite-check.py   # every health check in .claude/suite.json
+python3 tools/tv.py --help       # TV and emulator: connect, install, startup, home swap
+./gradlew :benchmark:connectedBenchmarkReleaseAndroidTest  # cold start on the TV
+./gradlew :app:generateBaselineProfile                     # regenerate the profile on the TV
 ```
 
 Needs JDK 17 or newer and the Android SDK (`ANDROID_HOME`, or `sdk.dir` in
 `local.properties`). Android Studio sets both up.
 
-Day-to-day iteration: Compose Preview for layout, Live Edit to the emulator or
-TV for changes inside a function (Android 11+ device), `installDebug` for the
-rest. Use an Android TV emulator for routine work and the real TV to confirm.
+Day-to-day iteration: see `docs/testing.md`. JVM tests for behaviour, Compose
+Preview for layout, the Android TV emulator (`tools/tv.py emulator`) for real
+apps, the TV for anything about speed. Sandro's PC is Windows: dev tooling is
+Python standard library, never bash. A cloud session cannot reach Google
+Maven, so there CI is the build.
 
 ## Task tracking
 
