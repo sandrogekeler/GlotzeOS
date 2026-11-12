@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "GlotzeOS"
 include(":app")
+include(":benchmark")

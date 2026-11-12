@@ -26,11 +26,16 @@ issue or PR that taught it.
 ## 4. Performant
 
 - [ ] Cold start on the TV: not measured yet. The first Macrobenchmark run
+      (`StartupBenchmark.withBaselineProfile`, median `timeToFullDisplayMs`)
       sets the budget, and it is a ratchet: lowered as it improves, never
-      raised to let a change through.
+      raised to let a change through. `tools/tv.py startup` is the quick
+      check in between (#23).
 - [ ] Release APK size: 1.6 MB unsigned on 2026-10-19 (R8 and resource
       shrinking on). Watch it when adding a dependency.
 - [ ] No `PackageManager` query, file read or bitmap decode on the main thread.
+      StrictMode logs it in debug builds.
+- [ ] Nothing is decoded that is not on screen, and nothing larger than it is
+      drawn (#21).
 
 ## Open backlog
 

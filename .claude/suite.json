@@ -7,6 +7,10 @@
   "health": {
     "commands": [
       {
+        "name": "tv tool tests",
+        "run": "python3 -m unittest discover -s tools"
+      },
+      {
         "name": "gradle check",
         "run": "./gradlew check"
       },

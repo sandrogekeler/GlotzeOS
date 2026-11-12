@@ -37,6 +37,11 @@
       "description": "Build tooling, dependencies and packaging."
     },
     {
+      "name": "area:core",
+      "color": "d4c5f9",
+      "description": "App list, launching, art loading and startup: the systems under the UI."
+    },
+    {
       "name": "area:ci",
       "color": "c5e8b7",
       "description": "CI, health checks, schema and drift validation."

@@ -3,12 +3,17 @@
 Intent, not record. What is done lives in the code and the closed issues; this
 file says what is next and why. Unchecked items are not done.
 
-## Now: on the TV
+## Now: foundations, then on the TV
 
-The app builds and lists apps. Nothing has run on real hardware yet.
+Tracked in #17. The systems everything later sits on, and the tooling to test
+them on the PC and the TV, come before features (Sandro, 2026-11-12).
 
-- [ ] Connect the TV over ADB and install the debug build (`docs/device.md`).
-      Record the model and Android version in `docs/device.md`.
+- [ ] Local testing: `tools/tv.py`, the TV emulator, `docs/testing.md`.
+- [ ] Core systems: live app list, a launch that cannot crash the home
+      screen, lazy banners at card size, StrictMode, focus tests.
+- [ ] Startup measurement: Macrobenchmark and the Baseline Profile generator.
+- [ ] Connect the TV over ADB and install the release build (`docs/device.md`).
+      Record the model and Android version with `tools/tv.py info`.
 - [ ] Set `minSdk` to the TV's API level. Live Edit on the TV needs Android 11
       (API 30) or newer.
 - [ ] Make GlotzeOS the home screen on that TV, with the undo tested first.
@@ -17,13 +22,14 @@ The app builds and lists apps. Nothing has run on real hardware yet.
 
 ## Next: a home screen worth keeping
 
-- [ ] Baseline Profile, generated on the TV, so first launch is compiled code.
-- [ ] Refresh the app list when an app is installed or removed.
-- [ ] Personalised home: favourites row, own order, hidden apps (stored locally).
+- [ ] Baseline Profile, generated on the TV and committed, so first launch is
+      compiled code (the generator exists; the profile does not yet).
+- [ ] Personalised home: favourites row, own order, hidden apps (stored locally;
+      the storage decision comes first, #30).
 - [ ] Intro animation when the TV wakes.
 - [ ] Transitions between the home screen and an app opening.
-- [ ] Design tokens, so colours, spacing and durations live in one place.
-- [ ] Compose UI tests for remote focus (Robolectric) and screenshot tests.
+- [ ] Design tokens, so colours, spacing and durations live in one place (#29).
+- [ ] Screenshot tests, once the design settles.
 
 ## Later
 
