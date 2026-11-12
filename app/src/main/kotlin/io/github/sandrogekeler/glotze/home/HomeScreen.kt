@@ -80,19 +80,19 @@ private fun AppCard(
                 .onSizeChanged { size = it },
     ) {
         val shown = loaded
-        when {
-            shown == null -> Text(text = app.label, modifier = Modifier.padding(16.dp))
-            shown.isBanner ->
-                Image(
-                    bitmap = shown.image,
-                    contentDescription = app.label,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize(),
-                )
-            else ->
-                Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
-                    Image(bitmap = shown.image, contentDescription = app.label, contentScale = ContentScale.Fit)
-                }
+        if (shown == null) {
+            Text(text = app.label, modifier = Modifier.padding(16.dp))
+        } else if (shown.isBanner) {
+            Image(
+                bitmap = shown.image,
+                contentDescription = app.label,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+            )
+        } else {
+            Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
+                Image(bitmap = shown.image, contentDescription = app.label, contentScale = ContentScale.Fit)
+            }
         }
     }
 }

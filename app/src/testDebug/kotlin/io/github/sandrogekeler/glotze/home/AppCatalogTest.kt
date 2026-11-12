@@ -35,19 +35,24 @@ class AppCatalogTest {
     fun listsTvAppsButNotItself() {
         installTvApp("com.example.player")
         catalog.start()
-        assertEquals(listOf("com.example.player"), catalog.apps.value?.map { it.packageName })
+        assertEquals(listOf("com.example.player"), packages())
     }
 
     @Test
     fun picksUpAnAppInstalledWhileRunning() {
         catalog.start()
-        assertTrue(catalog.apps.value.orEmpty().none { it.packageName == "com.example.new" })
+        assertTrue(packages().none { it == "com.example.new" })
 
         installTvApp("com.example.new")
         context.sendBroadcast(Intent(Intent.ACTION_PACKAGE_ADDED, Uri.parse("package:com.example.new")))
         shadowOf(Looper.getMainLooper()).idle()
 
-        assertTrue(catalog.apps.value.orEmpty().any { it.packageName == "com.example.new" })
+        assertTrue(packages().any { it == "com.example.new" })
+    }
+
+    private fun packages(): List<String> {
+        val apps = catalog.apps.value ?: return emptyList()
+        return apps.map { it.packageName }
     }
 
     private fun installTvApp(packageName: String) {

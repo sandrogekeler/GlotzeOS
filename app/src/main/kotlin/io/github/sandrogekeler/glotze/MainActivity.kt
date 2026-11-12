@@ -52,19 +52,37 @@ class MainActivity : ComponentActivity() {
 
     private fun open(app: TvApp) {
         when (val result = launchApp(this, app.packageName)) {
-            LaunchResult.Launched -> Unit
+            LaunchResult.Launched -> {
+                Unit
+            }
+
             LaunchResult.NotInstalled -> {
                 Log.i(TAG, "${app.packageName} is no longer installed; reloading the list")
                 catalog.reload()
             }
-            is LaunchResult.Refused -> Log.w(TAG, "Could not open ${app.packageName}: ${result.reason}")
+
+            is LaunchResult.Refused -> {
+                Log.w(TAG, "Could not open ${app.packageName}: ${result.reason}")
+            }
         }
     }
 
     /** Debug builds only: logs disk and network access on the main thread, and leaks. */
     private fun flagSlowMainThreadWork() {
-        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build())
-        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy
+                .Builder()
+                .detectAll()
+                .penaltyLog()
+                .build(),
+        )
+        StrictMode.setVmPolicy(
+            StrictMode.VmPolicy
+                .Builder()
+                .detectAll()
+                .penaltyLog()
+                .build(),
+        )
     }
 
     private companion object {
