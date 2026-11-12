@@ -35,7 +35,9 @@ fun HomeScreen(
     onOpen: (TvApp) -> Unit,
     art: ArtSource = NoArt,
 ) {
-    val firstApp = remember { FocusRequester() }
+    // The remote has no pointer: without a focused item, the first key press is lost. Only
+    // once, so the first card does not take focus back when it scrolls into view again.
+    var focusPlaced by remember { mutableStateOf(false) }
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 200.dp),
         contentPadding = PaddingValues(48.dp),
@@ -47,13 +49,10 @@ fun HomeScreen(
                 app = app,
                 art = art,
                 onClick = { onOpen(app) },
-                modifier = if (index == 0) Modifier.focusRequester(firstApp) else Modifier,
+                takeFocus = index == 0 && !focusPlaced,
+                onFocusTaken = { focusPlaced = true },
             )
         }
-    }
-    // The remote has no pointer: without a focused item, the first key press is lost.
-    LaunchedEffect(apps.isNotEmpty()) {
-        if (apps.isNotEmpty()) firstApp.requestFocus()
     }
 }
 
@@ -62,8 +61,18 @@ private fun AppCard(
     app: TvApp,
     art: ArtSource,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
+    takeFocus: Boolean,
+    onFocusTaken: () -> Unit,
 ) {
+    // Requested from inside the item: a lazy item exists only once the grid has measured it,
+    // which can be after an effect in HomeScreen has already run.
+    val focus = remember { FocusRequester() }
+    if (takeFocus) {
+        LaunchedEffect(Unit) {
+            focus.requestFocus()
+            onFocusTaken()
+        }
+    }
     var size by remember { mutableStateOf(IntSize.Zero) }
     // A card scrolled back into view draws its art in the first frame; a new one shows its
     // label until the art is decoded at the card's size.
@@ -74,7 +83,8 @@ private fun AppCard(
     Card(
         onClick = onClick,
         modifier =
-            modifier
+            Modifier
+                .focusRequester(focus)
                 .testTag(app.packageName)
                 .aspectRatio(16f / 9f)
                 .onSizeChanged { size = it },

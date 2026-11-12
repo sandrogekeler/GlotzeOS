@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -42,6 +44,8 @@ android {
     testOptions {
         // Robolectric reads the merged manifest and resources (src/testDebug).
         unitTests.isIncludeAndroidResources = true
+        // CI has no test report to open: print the assertion message and stack trace.
+        unitTests.all { it.testLogging { exceptionFormat = TestExceptionFormat.FULL } }
     }
 
     lint {
