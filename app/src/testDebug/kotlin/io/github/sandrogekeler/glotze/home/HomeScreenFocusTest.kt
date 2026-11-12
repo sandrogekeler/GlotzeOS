@@ -1,12 +1,18 @@
 package io.github.sandrogekeler.glotze.home
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.input.InputMode
+import androidx.compose.ui.input.InputModeManager
 import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.pressKey
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,16 +28,34 @@ class HomeScreenFocusTest {
 
     private val apps = listOf("alpha", "bravo", "charlie", "delta").map { TvApp(it, it, "$it.Main") }
 
+    // Tests start in touch mode, where Compose does not focus clickable items. A TV has no
+    // touchscreen and is always in key mode, so the tests run in key mode too.
+    private val keyMode =
+        object : InputModeManager {
+            override val inputMode = InputMode.Keyboard
+
+            override fun requestInputMode(inputMode: InputMode) = inputMode == InputMode.Keyboard
+        }
+
+    private fun show(onOpen: (TvApp) -> Unit = {}) {
+        compose.setContent { OnTv { HomeScreen(apps = apps, onOpen = onOpen) } }
+    }
+
+    @Composable
+    private fun OnTv(content: @Composable () -> Unit) {
+        CompositionLocalProvider(LocalInputModeManager provides keyMode, content = content)
+    }
+
     @Test
     fun firstAppHasFocusWhenTheListArrives() {
-        compose.setContent { HomeScreen(apps = apps, onOpen = {}) }
+        show()
         compose.onNodeWithTag("alpha").assertIsFocused()
     }
 
     @OptIn(ExperimentalTestApi::class)
     @Test
     fun dpadRightMovesToTheNextApp() {
-        compose.setContent { HomeScreen(apps = apps, onOpen = {}) }
+        show()
         compose.onNodeWithTag("alpha").performKeyInput { pressKey(Key.DirectionRight) }
         compose.onNodeWithTag("bravo").assertIsFocused()
     }
@@ -40,8 +64,8 @@ class HomeScreenFocusTest {
     @Test
     fun centreOpensTheFocusedApp() {
         var opened: TvApp? = null
-        compose.setContent { HomeScreen(apps = apps, onOpen = { opened = it }) }
+        show(onOpen = { opened = it })
         compose.onNodeWithTag("alpha").performKeyInput { pressKey(Key.DirectionCenter) }
-        compose.runOnIdle { org.junit.Assert.assertEquals("alpha", opened?.packageName) }
+        compose.runOnIdle { assertEquals("alpha", opened?.packageName) }
     }
 }
