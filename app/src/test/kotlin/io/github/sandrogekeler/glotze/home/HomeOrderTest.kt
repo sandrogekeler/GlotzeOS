@@ -7,7 +7,7 @@ class HomeOrderTest {
     private fun app(
         packageName: String,
         label: String = packageName,
-    ) = TvApp(packageName, label, banner = null)
+    ) = TvApp(packageName, label, activityName = "$packageName.Main")
 
     @Test
     fun leavesOutGlotzeItself() {
