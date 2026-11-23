@@ -79,8 +79,8 @@ Needs JDK 17 or newer and the Android SDK (`ANDROID_HOME`, or `sdk.dir` in
 Day-to-day iteration: see `docs/testing.md`. JVM tests for behaviour, Compose
 Preview for layout, the Android TV emulator (`tools/tv.py emulator`) for real
 apps, the TV for anything about speed. Sandro's PC is Windows: dev tooling is
-Python standard library, never bash. A cloud session cannot reach Google
-Maven, so there CI is the build.
+Python standard library, never bash. Cloud sessions can build and run
+`check` (they reach Google Maven since 2026-11-12) but have no emulator or TV.
 
 ## Task tracking
 
