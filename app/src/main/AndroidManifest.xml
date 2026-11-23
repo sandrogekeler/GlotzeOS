@@ -18,6 +18,7 @@
     </queries>
 
     <application
+        android:name=".GlotzeApplication"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -33,8 +34,12 @@
             android:shell="true"
             tools:targetApi="29" />
 
+        <!-- configChanges: a remote or keyboard connecting, or the TV switching resolution, would
+             otherwise recreate the home screen. Compose redraws for these itself. The same set as
+             Android's own launcher (Launcher3). -->
         <activity
             android:name=".MainActivity"
+            android:configChanges="keyboard|keyboardHidden|mcc|mnc|navigation|orientation|screenSize|screenLayout|smallestScreenSize"
             android:excludeFromRecents="true"
             android:exported="true"
             android:launchMode="singleTask"

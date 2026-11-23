@@ -1,5 +1,8 @@
 package io.github.sandrogekeler.glotze.home
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsFocused
@@ -48,5 +51,18 @@ class HomeScreenFocusTest {
         show(onOpen = { opened = it })
         compose.onNodeWithTag("alpha").performKeyInput { pressKey(Key.DirectionCenter) }
         compose.runOnIdle { assertEquals("alpha", opened?.packageName) }
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun homeOnTheHomeScreenGoesBackToTheFirstApp() {
+        var homePresses by mutableIntStateOf(0)
+        compose.setContent { HomeScreen(apps = apps, onOpen = {}, homePresses = homePresses) }
+        compose.onNodeWithTag("alpha").performKeyInput { pressKey(Key.DirectionRight) }
+        compose.onNodeWithTag("bravo").assertIsFocused()
+
+        homePresses++
+
+        compose.onNodeWithTag("alpha").assertIsFocused()
     }
 }

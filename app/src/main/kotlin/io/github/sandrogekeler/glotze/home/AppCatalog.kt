@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * The TV's apps in home-screen order, kept current while the home screen exists.
@@ -22,7 +23,8 @@ import kotlinx.coroutines.withContext
  * [apps] is null until the first load finishes, so "still loading" and "no apps" differ.
  * Installs, updates and removals arrive as package broadcasts; a burst of them (an update
  * sends removed, then added) collapses into one reload, and an unchanged list is not
- * emitted again because [StateFlow] skips equal values.
+ * emitted again because [StateFlow] skips equal values. A change to a package that stays in the
+ * list raises its [TvApp.revision], so the list does differ and its card loads fresh art.
  */
 class AppCatalog(
     private val context: Context,
@@ -34,12 +36,16 @@ class AppCatalog(
 
     private val reloads = Channel<Unit>(Channel.CONFLATED)
 
+    // Written on the main thread by the receiver, read on [io] by the load.
+    private val revisions = ConcurrentHashMap<String, Int>()
+
     private val packageChanges =
         object : BroadcastReceiver() {
             override fun onReceive(
                 context: Context,
                 intent: Intent,
             ) {
+                intent.data?.schemeSpecificPart?.let { revisions.merge(it, 1, Int::plus) }
                 reload()
             }
         }
@@ -49,7 +55,11 @@ class AppCatalog(
         scope.launch {
             for (request in reloads) {
                 try {
-                    state.value = withContext(io) { homeOrder(loadTvApps(context.packageManager), context.packageName) }
+                    state.value =
+                        withContext(io) {
+                            homeOrder(loadTvApps(context.packageManager), context.packageName)
+                                .map { it.copy(revision = revisions[it.packageName] ?: 0) }
+                        }
                 } catch (e: RuntimeException) {
                     // PackageManager calls go over binder; keep showing the last good list.
                     Log.w(TAG, "Could not load the app list", e)

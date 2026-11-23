@@ -46,20 +46,28 @@ object NoArt : ArtSource {
  *
  * Icons are often 432 px adaptive icons and banners can be larger than the card, so decoding
  * at full size would cost both time before the first frame and memory on a 2 GB TV.
+ *
+ * One entry per app: art for an older [TvApp.revision] is not returned, and the new art
+ * replaces it, so an updated app shows its new banner without the old one staying in memory.
  */
 class AppArtLoader(
     private val packageManager: PackageManager,
     maxCacheBytes: Int = (Runtime.getRuntime().maxMemory() / 8).toInt(),
 ) : ArtSource {
+    private class Entry(
+        val revision: Int,
+        val art: AppArt,
+    )
+
     private val cache =
-        object : LruCache<String, AppArt>(maxCacheBytes) {
+        object : LruCache<String, Entry>(maxCacheBytes) {
             override fun sizeOf(
                 key: String,
-                value: AppArt,
-            ): Int = value.image.width * value.image.height * 4
+                value: Entry,
+            ): Int = value.art.image.width * value.art.image.height * 4
         }
 
-    override fun cached(app: TvApp): AppArt? = cache.get(key(app))
+    override fun cached(app: TvApp): AppArt? = cache.get(key(app))?.takeIf { it.revision == app.revision }?.art
 
     override suspend fun load(
         app: TvApp,
@@ -73,7 +81,7 @@ class AppArtLoader(
                 val drawable = banner ?: info.loadIcon(packageManager)
                 val (width, height) = fitWithin(drawable.intrinsicWidth, drawable.intrinsicHeight, maxWidthPx, maxHeightPx)
                 AppArt(drawable.toBitmap(width, height).asImageBitmap(), isBanner = banner != null)
-                    .also { cache.put(key(app), it) }
+                    .also { cache.put(key(app), Entry(app.revision, it)) }
             } catch (e: PackageManager.NameNotFoundException) {
                 Log.i(TAG, "${app.packageName} is gone; the list reloads on its broadcast", e)
                 null

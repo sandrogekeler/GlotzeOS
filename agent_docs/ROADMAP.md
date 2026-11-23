@@ -8,10 +8,10 @@ file says what is next and why. Unchecked items are not done.
 Tracked in #17. The systems everything later sits on, and the tooling to test
 them on the PC and the TV, come before features (Sandro, 2026-11-12).
 
-- [ ] Local testing: `tools/tv.py`, the TV emulator, `docs/testing.md`.
-- [ ] Core systems: live app list, a launch that cannot crash the home
+- [x] Local testing: `tools/tv.py`, the TV emulator, `docs/testing.md`.
+- [x] Core systems: live app list, a launch that cannot crash the home
       screen, lazy banners at card size, StrictMode, focus tests.
-- [ ] Startup measurement: Macrobenchmark and the Baseline Profile generator.
+- [x] Startup measurement: Macrobenchmark and the Baseline Profile generator.
 - [ ] Connect the TV over ADB and install the release build (`docs/device.md`).
       Record the model and Android version with `tools/tv.py info`.
 - [ ] Set `minSdk` to the TV's API level. Live Edit on the TV needs Android 11

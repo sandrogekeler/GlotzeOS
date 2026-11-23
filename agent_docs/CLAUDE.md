@@ -22,6 +22,7 @@ cannot change what happens below it (boot animation, power-off). See
 |---|---|
 | `app/` | The launcher |
 | `app/src/main/kotlin/.../MainActivity.kt` | The single activity, registered as `HOME` and in the TV's app list |
+| `app/src/main/kotlin/.../GlotzeApplication.kt` | Holds the app list and the decoded art for the life of the process, so a recreated activity draws at once |
 | `app/src/main/kotlin/.../home/` | The home screen: the live app list (`AppCatalog.kt`, `TvApp.kt`), art loading (`AppArt.kt`), launching (`LaunchResult.kt`) and drawing (`HomeScreen.kt`) |
 | `app/src/test/` | Pure JVM unit tests, no Android |
 | `app/src/testDebug/` | Robolectric and Compose UI tests: focus, Back, catalog, launching |
@@ -78,8 +79,8 @@ Needs JDK 17 or newer and the Android SDK (`ANDROID_HOME`, or `sdk.dir` in
 Day-to-day iteration: see `docs/testing.md`. JVM tests for behaviour, Compose
 Preview for layout, the Android TV emulator (`tools/tv.py emulator`) for real
 apps, the TV for anything about speed. Sandro's PC is Windows: dev tooling is
-Python standard library, never bash. A cloud session cannot reach Google
-Maven, so there CI is the build.
+Python standard library, never bash. Cloud sessions can build and run
+`check` (they reach Google Maven since 2026-11-12) but have no emulator or TV.
 
 ## Task tracking
 
