@@ -22,6 +22,7 @@ cannot change what happens below it (boot animation, power-off). See
 |---|---|
 | `app/` | The launcher |
 | `app/src/main/kotlin/.../MainActivity.kt` | The single activity, registered as `HOME` and in the TV's app list |
+| `app/src/main/kotlin/.../GlotzeApplication.kt` | Holds the app list and the decoded art for the life of the process, so a recreated activity draws at once |
 | `app/src/main/kotlin/.../home/` | The home screen: the live app list (`AppCatalog.kt`, `TvApp.kt`), art loading (`AppArt.kt`), launching (`LaunchResult.kt`) and drawing (`HomeScreen.kt`) |
 | `app/src/test/` | Pure JVM unit tests, no Android |
 | `app/src/testDebug/` | Robolectric and Compose UI tests: focus, Back, catalog, launching |

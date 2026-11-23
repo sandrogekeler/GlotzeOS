@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -48,6 +49,21 @@ class AppCatalogTest {
         shadowOf(Looper.getMainLooper()).idle()
 
         assertTrue(packages().any { it == "com.example.new" })
+    }
+
+    @Test
+    fun anUpdatedAppGetsANewRevisionSoItsArtReloads() {
+        installTvApp("com.example.player")
+        catalog.start()
+        val before = catalog.apps.value?.single()
+
+        // An update arrives as removed (replacing), then added, for the same package.
+        context.sendBroadcast(Intent(Intent.ACTION_PACKAGE_ADDED, Uri.parse("package:com.example.player")))
+        shadowOf(Looper.getMainLooper()).idle()
+
+        val after = catalog.apps.value?.single()
+        assertEquals(before?.packageName, after?.packageName)
+        assertNotEquals(before?.revision, after?.revision)
     }
 
     private fun packages(): List<String> {

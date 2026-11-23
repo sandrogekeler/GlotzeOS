@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,11 +35,21 @@ fun HomeScreen(
     apps: List<TvApp>,
     onOpen: (TvApp) -> Unit,
     art: ArtSource = NoArt,
+    homePresses: Int = 0,
 ) {
     // The remote has no pointer: without a focused item, the first key press is lost. Only
     // once, so the first card does not take focus back when it scrolls into view again.
     var focusPlaced by remember { mutableStateOf(false) }
+    val grid = rememberLazyGridState()
+    // Home on the home screen goes back to the start: the top of the grid, focus on the first app.
+    LaunchedEffect(homePresses) {
+        if (homePresses > 0) {
+            grid.scrollToItem(0)
+            focusPlaced = false
+        }
+    }
     LazyVerticalGrid(
+        state = grid,
         columns = GridCells.Adaptive(minSize = 200.dp),
         contentPadding = PaddingValues(48.dp),
         horizontalArrangement = Arrangement.spacedBy(24.dp),
